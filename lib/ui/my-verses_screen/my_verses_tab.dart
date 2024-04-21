@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
-import 'package:prayers_verses/data/my_sections.dart';
-import 'package:prayers_verses/ui/my_section_provider.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
 import 'package:prayers_verses/ui/my_verses_picker_screen/my_verses_picker.dart';
 import 'package:provider/provider.dart';

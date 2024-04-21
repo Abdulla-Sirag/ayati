@@ -85,7 +85,7 @@ class _$MySectionDatabase extends MySectionDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `MySection` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `sectionFirstVerse` TEXT, `sectionChapter` TEXT, `sectionStart` INTEGER, `sectionEnd` INTEGER, `sectionPageNo` INTEGER, `isLong` INTEGER, `isRecited` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `MySection` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `sectionFirstVerse` TEXT, `sectionChapter` TEXT, `sectionChapterNo` INTEGER, `sectionStart` INTEGER, `sectionEnd` INTEGER, `sectionPageNo` INTEGER, `isLong` INTEGER, `isRecited` INTEGER, `filterOption` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -111,12 +111,14 @@ class _$MySectionDao extends MySectionDao {
                   'id': item.id,
                   'sectionFirstVerse': item.sectionFirstVerse,
                   'sectionChapter': item.sectionChapter,
+                  'sectionChapterNo': item.sectionChapterNo,
                   'sectionStart': item.sectionStart,
                   'sectionEnd': item.sectionEnd,
                   'sectionPageNo': item.sectionPageNo,
                   'isLong': item.isLong == null ? null : (item.isLong! ? 1 : 0),
                   'isRecited':
-                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0)
+                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0),
+                  'filterOption': item.filterOption?.index
                 }),
         _mySectionUpdateAdapter = UpdateAdapter(
             database,
@@ -126,12 +128,14 @@ class _$MySectionDao extends MySectionDao {
                   'id': item.id,
                   'sectionFirstVerse': item.sectionFirstVerse,
                   'sectionChapter': item.sectionChapter,
+                  'sectionChapterNo': item.sectionChapterNo,
                   'sectionStart': item.sectionStart,
                   'sectionEnd': item.sectionEnd,
                   'sectionPageNo': item.sectionPageNo,
                   'isLong': item.isLong == null ? null : (item.isLong! ? 1 : 0),
                   'isRecited':
-                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0)
+                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0),
+                  'filterOption': item.filterOption?.index
                 }),
         _mySectionDeletionAdapter = DeletionAdapter(
             database,
@@ -141,12 +145,14 @@ class _$MySectionDao extends MySectionDao {
                   'id': item.id,
                   'sectionFirstVerse': item.sectionFirstVerse,
                   'sectionChapter': item.sectionChapter,
+                  'sectionChapterNo': item.sectionChapterNo,
                   'sectionStart': item.sectionStart,
                   'sectionEnd': item.sectionEnd,
                   'sectionPageNo': item.sectionPageNo,
                   'isLong': item.isLong == null ? null : (item.isLong! ? 1 : 0),
                   'isRecited':
-                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0)
+                      item.isRecited == null ? null : (item.isRecited! ? 1 : 0),
+                  'filterOption': item.filterOption?.index
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -162,33 +168,35 @@ class _$MySectionDao extends MySectionDao {
   final DeletionAdapter<MySection> _mySectionDeletionAdapter;
 
   @override
-  Future<List<MySection>> findAllMySections() async {
+  Future<List<MySection>> findPrayerSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection ORDER BY sectionPageNo ASC',
-        mapper: (Map<String, Object?> row) => MySection(
-            id: row['id'] as int?,
-            sectionFirstVerse: row['sectionFirstVerse'] as String?,
-            sectionChapter: row['sectionChapter'] as String?,
-            sectionStart: row['sectionStart'] as int?,
-            sectionEnd: row['sectionEnd'] as int?,
-            sectionPageNo: row['sectionPageNo'] as int?,
-            isLong:
-                row['isLong'] == null ? null : (row['isLong'] as int) != 0));
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
+        arguments: [index]);
   }
 
   @override
-  Future<List<MySection>> findNotRecitedSections() async {
+  Future<List<MySection>> findMemorizationSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection WHERE isRecited = false ORDER BY sectionPageNo ASC',
-        mapper: (Map<String, Object?> row) => MySection(
-            id: row['id'] as int?,
-            sectionFirstVerse: row['sectionFirstVerse'] as String?,
-            sectionChapter: row['sectionChapter'] as String?,
-            sectionStart: row['sectionStart'] as int?,
-            sectionEnd: row['sectionEnd'] as int?,
-            sectionPageNo: row['sectionPageNo'] as int?,
-            isLong:
-                row['isLong'] == null ? null : (row['isLong'] as int) != 0));
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
+        arguments: [index]);
+  }
+
+  @override
+  Future<List<MySection>> findSuggestedSections(int index) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
+        arguments: [index]);
+  }
+
+  @override
+  Future<List<MySection>> findNotRecitedSections(int index) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM MySection WHERE filterOption = ?1 AND isRecited = false ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
+        arguments: [index]);
   }
 
   @override
@@ -207,3 +215,6 @@ class _$MySectionDao extends MySectionDao {
     await _mySectionDeletionAdapter.delete(mySection);
   }
 }
+
+// ignore_for_file: unused_element
+final _filterOptionConverter = FilterOptionConverter();

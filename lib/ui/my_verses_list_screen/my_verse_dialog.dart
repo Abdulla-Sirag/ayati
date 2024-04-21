@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
+import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
 import 'package:provider/provider.dart';
 
 class MyVersesDialog extends StatefulWidget {
-  const MyVersesDialog({super.key});
+  final FilterOption? filterOption;
+
+  const MyVersesDialog({super.key, this.filterOption});
 
   @override
   State<MyVersesDialog> createState() => _MyVersesDialogState();
@@ -12,14 +15,14 @@ class MyVersesDialog extends StatefulWidget {
 
 class _MyVersesDialogState extends State<MyVersesDialog> {
   final _formKey = GlobalKey<FormState>();
-  bool? _isLongVerse = true;
+  final bool _isLongVerse = true;
   final MySection _section = MySection();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    debugPrint(_isLongVerse.toString());
+    debugPrint('First _section.filter: ${widget.filterOption}');
   }
 
   @override
@@ -138,7 +141,9 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
               _formKey.currentState!.save();
 
               // how to log data.
-              debugPrint('Final _section.isLong: ${_section.isLong}');
+              debugPrint('Final _section.filter: ${MyVersesListTab.selectedFilter}');
+              _section.filterOption= MyVersesListTab.selectedFilter;
+              _section.sectionChapterNo= 1;
               viewModel.addMySection(_section);
 
               Navigator.pop(context); // Close dialog

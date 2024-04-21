@@ -23,7 +23,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
               
       ),
       bottomNavigationBar: NavigationBar(
-        backgroundColor: Color.fromARGB(255, 233, 219, 179),
+        backgroundColor: const Color.fromARGB(255, 233, 219, 179),
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
