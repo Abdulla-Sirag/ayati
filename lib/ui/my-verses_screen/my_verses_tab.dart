@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
+import 'package:prayers_verses/my_verses_utils.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
+import 'package:prayers_verses/ui/my_verses_display_screen/my_verses_display_screen.dart';
 import 'package:prayers_verses/ui/my_verses_picker_screen/my_verses_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -126,20 +128,36 @@ class _MyVersesTabState extends State<MyVersesTab> {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8, left: 8),
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                _firstSection == null
-                          ? ' '
-                          : _firstSection!.sectionFirstVerse!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      VerseDisplayScreen(section: _firstSection!),
+                ),
+              );
+            },
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(
+                    _firstSection == null
+                              ? ' '
+                              : _firstSection!.sectionFirstVerse!,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -263,20 +281,36 @@ class _MyVersesTabState extends State<MyVersesTab> {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8, left: 8),
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                _secondSection == null
-                          ? ' '
-                          : _secondSection!.sectionFirstVerse!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      VerseDisplayScreen(section: _secondSection!),
+                ),
+              );
+            },
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(
+                    _secondSection == null
+                              ? ' '
+                              : _secondSection!.sectionFirstVerse!,
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -291,7 +325,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
                   onPressed: () {
                     switch (secondLeftButton) {
                       case 'عشوائي':
-                        _getSecondRandomIndex();
+                        _getSecondRandomIndex(context);
                         break;
 
                       case 'إلغاء':
@@ -362,12 +396,28 @@ class _MyVersesTabState extends State<MyVersesTab> {
     });
   }
 
-  _getSecondRandomIndex() {
+  _getSecondRandomIndex(BuildContext context) {
     Random random = Random();
-    int randomIndex = random.nextInt(mySections!.length);
+    bool? isLong= true;
+    int? randomIndex;
+    int limiter= 0;
+
+    while( isLong! ) {
+      
+      randomIndex = random.nextInt(mySections!.length);
+      isLong= mySections![randomIndex].isLong;
+
+      limiter++;
+
+      if (limiter == 50) {
+        isLong= false;
+        MyVersesUtils.showSnackBar(context: context, msg: 'لا يوجد مقاطع قصيرة', icon:  Icons.playlist_remove);
+      }
+
+    }
 
     setState(() {
-      _secondSection = mySections![randomIndex];
+      _secondSection = mySections![randomIndex!];
       secondRightButton = 'تأكيد';
       secondLeftButton = 'إلغاء';
     });

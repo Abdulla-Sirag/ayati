@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/local/my_section_database.dart';
 import 'package:prayers_verses/data/my_section.dart';
-import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
 
 class MySectionRepository {
   final MySectionDatabase database;
@@ -24,11 +22,11 @@ class MySectionRepository {
 
   Future<List<MySection>> getNotRecitedSections() async {
 
-    final NotRecitedSections= await database.mySectionDao.findNotRecitedSections(FilterOption.prayerVerses.index);
+    final notRecitedSections= await database.mySectionDao.findNotRecitedSections(FilterOption.prayerVerses.index);
     // debugPrint('First _section.filter: i am in not recited');
 
 
-    if (NotRecitedSections.isEmpty) {
+    if (notRecitedSections.isEmpty) {
       // debugPrint('First _section.filter: i am in not recited empty');
       
       final allSections = await database.mySectionDao.findPrayerSections(FilterOption.prayerVerses.index);
@@ -44,7 +42,7 @@ class MySectionRepository {
         }
       }
     }
-    return NotRecitedSections;
+    return notRecitedSections;
   }
 
   Future<void> insertMySection(MySection mySection) async {

@@ -8,7 +8,6 @@ enum FilterOption { suggestedVerses, memorizationVerses, prayerVerses }
 class MySection {
   @PrimaryKey(autoGenerate: true)
     int? id;
-
     String? sectionFirstVerse;
     String? sectionChapter;
     int? sectionChapterNo;

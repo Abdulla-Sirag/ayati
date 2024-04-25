@@ -170,7 +170,7 @@ class _$MySectionDao extends MySectionDao {
   @override
   Future<List<MySection>> findPrayerSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo ASC, sectionChapterNo ASC',
         mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
         arguments: [index]);
   }
@@ -178,7 +178,7 @@ class _$MySectionDao extends MySectionDao {
   @override
   Future<List<MySection>> findMemorizationSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo ASC, sectionChapterNo ASC',
         mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
         arguments: [index]);
   }
@@ -186,7 +186,7 @@ class _$MySectionDao extends MySectionDao {
   @override
   Future<List<MySection>> findSuggestedSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        'SELECT * FROM MySection WHERE filterOption = ?1 ORDER BY sectionPageNo ASC, sectionChapterNo ASC',
         mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
         arguments: [index]);
   }
@@ -194,7 +194,7 @@ class _$MySectionDao extends MySectionDao {
   @override
   Future<List<MySection>> findNotRecitedSections(int index) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM MySection WHERE filterOption = ?1 AND isRecited = false ORDER BY sectionPageNo AND sectionChapterNo ASC',
+        'SELECT * FROM MySection WHERE filterOption = ?1 AND isRecited = false ORDER BY sectionPageNo ASC, sectionChapterNo ASC',
         mapper: (Map<String, Object?> row) => MySection(id: row['id'] as int?, sectionFirstVerse: row['sectionFirstVerse'] as String?, sectionChapter: row['sectionChapter'] as String?, sectionChapterNo: row['sectionChapterNo'] as int?, sectionStart: row['sectionStart'] as int?, sectionEnd: row['sectionEnd'] as int?, sectionPageNo: row['sectionPageNo'] as int?, isLong: row['isLong'] == null ? null : (row['isLong'] as int) != 0, filterOption: row['filterOption'] == null ? null : FilterOption.values[row['filterOption'] as int]),
         arguments: [index]);
   }

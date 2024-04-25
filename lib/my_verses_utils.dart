@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 
 class MyVersesUtils {
 
-
-
-static void showSnackBar({required BuildContext context, String? msg}) {
+static void showSnackBar({required BuildContext context, String? msg, IconData? icon}) {
 
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
      content: Row(
@@ -13,14 +11,24 @@ static void showSnackBar({required BuildContext context, String? msg}) {
         children: [
           Text(msg!),// Icon
           const SizedBox(width: 8), // Space between icon and text
-          const Icon(
-          Icons.no_encryption_outlined,
+           Icon(
+          icon!,
           color: Color.fromARGB(255, 233, 219, 179),
         ), // Text
         ],
       )));
-
 }
+
+static bool isShortText(String text) {
+    // Split the text into words
+    List<String> words = text.split(' ');
+
+    // Count the number of words
+    int wordCount = words.length;
+
+    // Check if the word count is less than 8
+    return wordCount < 9;
+  }
 
 // static void showToast({String? msg}) {
 //     Fluttertoast.showToast(

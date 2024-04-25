@@ -63,4 +63,41 @@ class MySectionViewModel extends ChangeNotifier {
     // loadNotRecitedSections();
     
   }
+
+  int countVersesNo() {
+  int sum = 0;
+  int end, start;
+  for (MySection section in mySections) {
+    // Add null checks for sectionStart and sectionEnd
+    start = section.sectionStart ?? 0; // Default to 0 if null
+    end = section.sectionEnd ?? 0; // Default to 0 if null
+
+    try {
+      // Ensure both start and end are non-null before subtraction
+      sum += (end - start + 1); // +1 if you want to include sectionEnd in the count
+    } catch (e) {
+      // Handle the exception
+      print("Exception occurred: ${e.toString()}");
+      // You can choose to ignore the section or take other actions here
+    }
+  }
+  return sum;
+}
+
+
+  int countChaptersNo() {
+
+    Set<int> uniqueChapterNumbers = {};
+    int sectionStart;
+
+// Iterate through your mySections list
+    for (MySection section in mySections) {
+
+      sectionStart = section.sectionChapterNo ?? 0;
+
+      uniqueChapterNumbers.add(sectionStart);
+
+    }
+    return uniqueChapterNumbers.length;
+  }
 }

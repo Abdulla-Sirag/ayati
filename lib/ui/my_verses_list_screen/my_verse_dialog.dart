@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
+import 'package:prayers_verses/my_verses_utils.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
 import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
 import 'package:provider/provider.dart';
+import 'package:quran/quran.dart';
 
 class MyVersesDialog extends StatefulWidget {
   final FilterOption? filterOption;
@@ -43,7 +45,19 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'البداية'),
+                  decoration: const InputDecoration(labelText: 'رقم السورة'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'رجاء أدخل رقم السورة';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) =>
+                      _section.sectionChapterNo = int.parse(value!),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'الآية الأولى'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -52,19 +66,10 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
                     return null;
                   },
                   onSaved: (value) => _section.sectionStart = int.parse(value!),
-                ),
+                ), const SizedBox(width: 4),
+                // const SizedBox(width: 4),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'السورة'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'رجاء أدخل إسم السورة ';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _section.sectionChapter = value!,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'النهاية'),
+                  decoration: const InputDecoration(labelText: 'الآية الأخيرة'),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -73,28 +78,6 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
                     return null;
                   },
                   onSaved: (value) => _section.sectionEnd = int.parse(value!),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'الآية'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'رجاء أدخل الآية';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _section.sectionFirstVerse = value!,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'الصفحة'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'رجاء أدخل رقم الصفحة';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) =>
-                      _section.sectionPageNo = int.parse(value!),
                 ),
                 const SizedBox(height: 10),
                 RadioListTile<bool>(
@@ -116,9 +99,7 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
                   groupValue: _section.isLong,
                   onChanged: (bool? value) {
                     setState(() {
-                      debugPrint(value.toString());
                       _section.isLong = value ?? false;
-                      debugPrint('Final _section.isLong: ${_section.isLong}');
                     });
                   },
                 ),
@@ -142,16 +123,41 @@ class _MyVersesDialogState extends State<MyVersesDialog> {
 
               // how to log data.
               debugPrint('Final _section.filter: ${MyVersesListTab.selectedFilter}');
-              _section.filterOption= MyVersesListTab.selectedFilter;
-              _section.sectionChapterNo= 1;
+              _generateSection();
               viewModel.addMySection(_section);
 
               Navigator.pop(context); // Close dialog
-            }
+            } 
           },
           child: const Text('حفظ'),
         ),
       ],
     );
   }
+  
+  void _generateSection() {
+    _section.filterOption = MyVersesListTab.selectedFilter;
+    _section.sectionChapter = getSurahNameArabic(_section.sectionChapterNo!);
+     _section.sectionPageNo =
+        getPageNumber(_section.sectionChapterNo!, _section.sectionStart!);
+    _section.sectionFirstVerse = _getVerseText(section: _section);
+
+  }
+
+String? _getVerseText({required MySection section}) {
+    int chapterNo = section.sectionChapterNo!;
+    int verseNo = section.sectionStart!;
+
+    String verse = getVerse(chapterNo, verseNo);
+
+    while (MyVersesUtils.isShortText(verse)) {
+      verse =
+          '$verse ${getVerseEndSymbol(verseNo)} ${getVerse(chapterNo, verseNo + 1)}';
+
+      verseNo++;
+    }
+
+    return verse;
+  }
+  
 }

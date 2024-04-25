@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:prayers_verses/data/my_section.dart';
+import 'package:prayers_verses/data/my_sections.dart';
 import 'package:prayers_verses/my_verses_utils.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class myVersesListCard extends StatelessWidget {
-  const myVersesListCard({super.key, this.section});
+  const myVersesListCard({super.key, required this.section});
 
-  final section;
+  final MySection section;
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +23,13 @@ class myVersesListCard extends StatelessWidget {
           children: <Widget>[
             ListTile(
               trailing: const Icon(Icons.format_quote),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(section.sectionFirstVerse ?? 'No info'),
-                ],
+              title: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Text(
+                  section.sectionFirstVerse ?? 'No info',
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -35,29 +41,63 @@ class myVersesListCard extends StatelessWidget {
             ),
             Row(
               children: <Widget>[
-                TextButton(
-                  child: const Text('حذف'),
+                ElevatedButton.icon(
                   onPressed: () {
                     /* ... */
                     viewModel.deleteMySection(section);
                   },
+                  icon: const Icon(
+                    Icons.delete_outline_outlined,
+                    size: 16,
+                  ),
+                  label: const Text('حذف'),
                 ),
                 const SizedBox(width: 8),
-                TextButton(
-                  child: const Text('تعديل'),
-                  onPressed: () {
-                    /* ... */
-                    MyVersesUtils.showSnackBar(context: context, 
-                    msg: 'التعديل غير مسموح');
-                    // MyVersesUtils.showToast(msg: 'Never allowed');
-                  },
+                Visibility(
+                  visible: !_isPrayerVerses(),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      /* ... */
+                      section.filterOption = FilterOption.prayerVerses;
+                      viewModel.updateMySection(section);
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      size: 16,
+                    ),
+                    label: const Text('الصلاة'),
+                  ),
                 ),
                 const SizedBox(width: 8),
+                Visibility(
+                  visible: !_isPrayerOrMemorizationVerses(),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      /* ... */
+                      section.filterOption= FilterOption.memorizationVerses;
+                      viewModel.updateMySection(section);
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      size: 16,
+                    ),
+                    label: const Text('الحفظ'),
+                  ),
+                ),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  bool _isPrayerVerses() {
+
+    return section.filterOption == FilterOption.prayerVerses;
+   
+  }
+  bool _isPrayerOrMemorizationVerses() {
+    return section.filterOption == FilterOption.prayerVerses || section.filterOption == FilterOption.memorizationVerses ;
   }
 }
