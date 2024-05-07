@@ -9,7 +9,7 @@ class MyVersesPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final viewModel = Provider.of<MySectionViewModel>(context, listen: true);
+    final viewModel = Provider.of<MySectionViewModel>(context, listen: false);
 
     // Call loadMySections when widget is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,6 +38,7 @@ class MyVersesPicker extends StatelessWidget {
               },
               child: myVersesListCard(
                 section: mySections[index],
+                screen: 'picker',
               ),
             );
           },

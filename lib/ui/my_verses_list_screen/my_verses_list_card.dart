@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:prayers_verses/data/my_section.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class myVersesListCard extends StatelessWidget {
-  const myVersesListCard({super.key, required this.section});
+  const myVersesListCard({super.key, required this.section, required this.screen});
 
   final MySection section;
+  final String screen;
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +39,19 @@ class myVersesListCard extends StatelessWidget {
             ),
             Row(
               children: <Widget>[
-                ElevatedButton.icon(
-                  onPressed: () {
-                    /* ... */
-                    viewModel.deleteMySection(section);
-                  },
-                  icon: const Icon(
-                    Icons.delete_outline_outlined,
-                    size: 16,
+                Visibility(
+                  visible: screen != 'picker',
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      /* ... */
+                      viewModel.deleteMySection(section);
+                    },
+                    icon: const Icon(
+                      Icons.delete_outline_outlined,
+                      size: 16,
+                    ),
+                    label: const Text('حذف'),
                   ),
-                  label: const Text('حذف'),
                 ),
                 const SizedBox(width: 8),
                 Visibility(

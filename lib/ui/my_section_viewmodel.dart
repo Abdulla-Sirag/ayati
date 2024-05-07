@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:prayers_verses/data/my_section.dart';
 import 'package:prayers_verses/data/my_section_repository.dart';
+import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
 import 'package:quran/quran.dart';
 
 class MySectionViewModel extends ChangeNotifier {
@@ -10,7 +11,7 @@ class MySectionViewModel extends ChangeNotifier {
   List<MySection> NotRecitedSections = [];
   
   double memorizationRatio = 0;
-
+  
   MySectionViewModel(this.repository);
 
   void updateRepository(MySectionRepository repository) {
@@ -33,6 +34,7 @@ class MySectionViewModel extends ChangeNotifier {
         mySections = await repository.getPrayerSections();
         break;
     }
+    calculateMemorizationRatio();
     notifyListeners();
   }
 
@@ -43,7 +45,7 @@ class MySectionViewModel extends ChangeNotifier {
 
   void addMySection(MySection mySection) async {
     await repository.insertMySection(mySection);
-    // loadMySections();
+    loadMySections(MyVersesListTab.selectedFilter);
   }
 
   void updateMySection(MySection mySection) async {
@@ -55,13 +57,14 @@ class MySectionViewModel extends ChangeNotifier {
     }
     
     // try to remove this
-    // loadNotRecitedSections();
+    loadMySections(MyVersesListTab.selectedFilter);
+    loadNotRecitedSections();
   }
 
   void deleteMySection(MySection mySection) async {
     await repository.deleteMySection(mySection);
-    // loadMySections();
-    // loadNotRecitedSections();
+    loadMySections(MyVersesListTab.selectedFilter);
+    loadNotRecitedSections();
     
   }
 
@@ -145,11 +148,12 @@ debugPrint('totalWordsCount1: ${wordsCount}');
 }
 
  Future<void> calculateMemorizationRatio () async {
-  double totalWordsCount = 77439;
-  double wordsCount = await calculateWordsCount();
-  debugPrint('totalWordsCount2: ${wordsCount}');
-  memorizationRatio = (wordsCount / totalWordsCount * 100) ;
-  debugPrint('totalWordsCount3: $memorizationRatio');
+  
+      double totalWordsCount = 77439;
+      double wordsCount = await calculateWordsCount();
+      debugPrint('totalWordsCount2: ${wordsCount}');
+      memorizationRatio = (wordsCount / totalWordsCount * 100);
+      debugPrint('totalWordsCount3: $memorizationRatio');
 
 }
 

@@ -32,17 +32,16 @@ class _MyVersesListTabState extends State<MyVersesListTab> {
       // Add your database filtering logic here
     });
   }
-
   
 
   @override
   Widget build(BuildContext context) {
-    viewModel = Provider.of<MySectionViewModel>(context, listen: true);
+    viewModel = Provider.of<MySectionViewModel>(context, listen: false);
 
     // Call loadMySections when widget is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
       viewModel?.loadMySections(MyVersesListTab.selectedFilter);
-      viewModel?.calculateMemorizationRatio();
+      // viewModel?.calculateMemorizationRatio();
     });
 
     return Scaffold(
@@ -213,6 +212,7 @@ class _MyVersesListTabState extends State<MyVersesListTab> {
                     },
                     child: myVersesListCard(
                       section: mySections[index],
+                      screen: 'list',
                     ),
                   );
                 },

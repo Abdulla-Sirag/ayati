@@ -30,7 +30,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
   @override
   Widget build(BuildContext context) {
 
-    viewModel = Provider.of<MySectionViewModel>(context, listen: true);
+    viewModel = Provider.of<MySectionViewModel>(context, listen: false);
 
     // Call loadMySections when widget is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -174,7 +174,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
                   onPressed: () {
                     switch (firstLeftButton) {
                       case 'عشوائي':
-                         mySections!.isEmpty  ?  null : _getFirstRandomIndex();
+                         mySections!.isEmpty  ?  null : _getFirstRandomIndex(context);
                         break;
 
                       case 'إلغاء':
@@ -387,7 +387,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
     }
   }
 
-  _getFirstRandomIndex() {
+  _getFirstRandomIndex(BuildContext context) {
     Random random = Random();
     bool isLong = true;
     int? randomIndex;
@@ -404,6 +404,8 @@ class _MyVersesTabState extends State<MyVersesTab> {
       }
 
       randomIndex = random.nextInt(mySections!.length);
+      debugPrint(
+          'Limiter $limiter : ${mySections![randomIndex].isLong}, ${mySections![randomIndex].sectionChapter}');
       
       if (isLong == mySections![randomIndex].isLong) {
         isLong =false;
@@ -436,6 +438,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
 
       randomIndex = random.nextInt(mySections!.length);
       isLong= mySections![randomIndex].isLong;
+      debugPrint('Limiter $limiter : ${mySections![randomIndex].isLong}, ${mySections![randomIndex].sectionChapter}');
 
       limiter++;
 
