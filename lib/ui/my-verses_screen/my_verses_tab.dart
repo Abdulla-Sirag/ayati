@@ -30,7 +30,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
   @override
   Widget build(BuildContext context) {
 
-    viewModel = Provider.of<MySectionViewModel>(context, listen: false);
+    viewModel = Provider.of<MySectionViewModel>(context, listen: true);
 
     // Call loadMySections when widget is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
