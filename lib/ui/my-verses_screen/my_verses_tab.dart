@@ -28,7 +28,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+
     viewModel = Provider.of<MySectionViewModel>(context, listen: true);
 
     // Call loadMySections when widget is initialized
@@ -387,10 +387,30 @@ class _MyVersesTabState extends State<MyVersesTab> {
 
   _getFirstRandomIndex() {
     Random random = Random();
-    final randomIndex = random.nextInt(mySections!.length);
+    bool isLong = true;
+    int? randomIndex;
+    int limiter = 0;
+
+    while (isLong) {
+      if (limiter == 50) {
+        MyVersesUtils.showSnackBar(
+            context: context,
+            msg: 'لا يوجد مقاطع طويلة',
+            icon: Icons.playlist_remove);
+        break;
+      }
+
+      randomIndex = random.nextInt(mySections!.length);
+      
+      if (isLong == mySections![randomIndex].isLong) {
+        isLong =false;
+      }
+
+      limiter++;
+    }
 
     setState(() {
-      _firstSection = mySections![randomIndex];
+      _firstSection = mySections![randomIndex!];
       firstRightButton = 'تأكيد';
       firstLeftButton = 'إلغاء';
     });
@@ -404,15 +424,17 @@ class _MyVersesTabState extends State<MyVersesTab> {
 
     while( isLong! ) {
       
+      if (limiter == 50) {
+        
+        MyVersesUtils.showSnackBar(context: context, msg: 'لا يوجد مقاطع قصيرة', icon:  Icons.playlist_remove);
+        break;
+        
+      }
+
       randomIndex = random.nextInt(mySections!.length);
       isLong= mySections![randomIndex].isLong;
 
       limiter++;
-
-      if (limiter == 50) {
-        isLong= false;
-        MyVersesUtils.showSnackBar(context: context, msg: 'لا يوجد مقاطع قصيرة', icon:  Icons.playlist_remove);
-      }
 
     }
 

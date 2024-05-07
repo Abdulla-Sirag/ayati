@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:prayers_verses/data/my_section.dart';
-import 'package:prayers_verses/data/my_sections.dart';
-import 'package:prayers_verses/my_verses_utils.dart';
 import 'package:prayers_verses/ui/my_section_viewmodel.dart';
 import 'package:provider/provider.dart';
 

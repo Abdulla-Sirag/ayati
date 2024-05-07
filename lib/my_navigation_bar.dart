@@ -14,7 +14,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    Theme.of(context);
     return Scaffold(
       appBar: AppBar(
               title: const Text ('آياتي'),

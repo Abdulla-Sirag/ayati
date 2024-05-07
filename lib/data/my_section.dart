@@ -1,5 +1,4 @@
 import 'package:floor/floor.dart';
-import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
 
 
 enum FilterOption { suggestedVerses, memorizationVerses, prayerVerses }

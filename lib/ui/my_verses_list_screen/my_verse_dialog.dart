@@ -17,12 +17,10 @@ class MyVersesDialog extends StatefulWidget {
 
 class _MyVersesDialogState extends State<MyVersesDialog> {
   final _formKey = GlobalKey<FormState>();
-  final bool _isLongVerse = true;
   final MySection _section = MySection();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     debugPrint('First _section.filter: ${widget.filterOption}');
   }

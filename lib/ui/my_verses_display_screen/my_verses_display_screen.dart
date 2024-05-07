@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
-import 'package:prayers_verses/my_verses_utils.dart';
 import 'package:quran/quran.dart';
 
 class VerseDisplayScreen extends StatelessWidget {
@@ -47,12 +46,12 @@ class VerseDisplayScreen extends StatelessWidget {
 
       verse = getVerse(chapterNo, firstVerseNo);
 
-      verses!.add('$verse ${getVerseEndSymbol(firstVerseNo)}');
+      verses.add('$verse ${getVerseEndSymbol(firstVerseNo)}');
           
       firstVerseNo++;
     }
 
-    return verses!;
+    return verses;
   }
 
 }

@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:prayers_verses/data/my_section.dart';
 import 'package:prayers_verses/data/my_section_repository.dart';
-import 'package:prayers_verses/ui/my_verses_list_screen/my_verses_list_tab.dart';
+import 'package:quran/quran.dart';
 
 class MySectionViewModel extends ChangeNotifier {
   late MySectionRepository repository;
   List<MySection> mySections = [];
   
   List<MySection> NotRecitedSections = [];
+  
+  double memorizationRatio = 0;
 
   MySectionViewModel(this.repository);
 
@@ -16,7 +18,6 @@ class MySectionViewModel extends ChangeNotifier {
     // loadMySections(
     //     filter); // You might want to reload data when repository is updated
   }
-
 
 
   void loadMySections(FilterOption filter) async {
@@ -100,4 +101,56 @@ class MySectionViewModel extends ChangeNotifier {
     }
     return uniqueChapterNumbers.length;
   }
+
+  countPagesNo() {
+
+     Set<int> uniquePagesNumbers = {};
+    int sectionFirstPage, sectionSecondPage;
+
+// Iterate through your mySections list
+    for (MySection section in mySections) {
+      sectionFirstPage = getPageNumber(section.sectionChapterNo ?? 1, section.sectionStart ?? 1);
+      sectionSecondPage = getPageNumber(section.sectionChapterNo ?? 1, section.sectionEnd ?? 1);
+
+      for (int i= sectionFirstPage; i <= sectionSecondPage; i++) {
+        uniquePagesNumbers.add(i);
+      }
+    }
+    return uniquePagesNumbers.length;
+
+  }
+
+Future<double> calculateWordsCount() async {
+  int wordsCount = 0;
+
+  for (MySection section in mySections) {
+    int? chapterNo = section.sectionChapterNo;
+    int? startVerse = section.sectionStart;
+    int? endVerse = section.sectionEnd;
+
+    // Retrieve verses from Quran package
+    for (int verseNo = startVerse!; verseNo <= endVerse!; verseNo++) {
+      // Get verse text
+      String verseText = await getVerse(chapterNo!, verseNo);
+      
+      // Count words in verse text
+      List<String> words = verseText.split(' ');
+      wordsCount += words.length;
+    }
+  }
+
+debugPrint('totalWordsCount1: ${wordsCount}');
+  // Pass wordsCount to callback function
+  return wordsCount.toDouble();
+}
+
+ Future<void> calculateMemorizationRatio () async {
+  double totalWordsCount = 77439;
+  double wordsCount = await calculateWordsCount();
+  debugPrint('totalWordsCount2: ${wordsCount}');
+  memorizationRatio = (wordsCount / totalWordsCount * 100) ;
+  debugPrint('totalWordsCount3: $memorizationRatio');
+
+}
+
 }

@@ -8,7 +8,6 @@ class MyVersesPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
 
     final viewModel = Provider.of<MySectionViewModel>(context, listen: true);
 
@@ -19,7 +18,12 @@ class MyVersesPicker extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Prays Verses'),
+        title: Consumer<MySectionViewModel>(
+          builder: (context, viewModel, _) {
+            // Display the number of sections once they are loaded
+            return Text('${viewModel.NotRecitedSections.length}');
+          },
+        ),
         backgroundColor: const Color.fromARGB(255, 233, 219, 179),
       ),
       body: Consumer<MySectionViewModel>(builder: (context, viewModel, _) {
