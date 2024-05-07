@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:prayers_verses/data/my_section.dart';
@@ -173,7 +174,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
                   onPressed: () {
                     switch (firstLeftButton) {
                       case 'عشوائي':
-                        _getFirstRandomIndex();
+                         mySections!.isEmpty  ?  null : _getFirstRandomIndex();
                         break;
 
                       case 'إلغاء':
@@ -325,7 +326,8 @@ class _MyVersesTabState extends State<MyVersesTab> {
                   onPressed: () {
                     switch (secondLeftButton) {
                       case 'عشوائي':
-                        _getSecondRandomIndex(context);
+
+                        mySections!.isEmpty  ? null : _getSecondRandomIndex(context);
                         break;
 
                       case 'إلغاء':
@@ -391,6 +393,7 @@ class _MyVersesTabState extends State<MyVersesTab> {
     int? randomIndex;
     int limiter = 0;
 
+    
     while (isLong) {
       if (limiter == 50) {
         MyVersesUtils.showSnackBar(
